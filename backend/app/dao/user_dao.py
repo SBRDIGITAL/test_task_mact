@@ -1,11 +1,10 @@
-from typing import Optional
+from typing import Optional, Any
 
 from sqlalchemy import Table
 
 from dao.base_dao import BaseDAO
 from database.tables.tables_data import Tables
 
-from models.users import ListUsersModel, ListUsersWithIdModel, UserWithIdModel, UserModel
 
 
 class UserDAO(BaseDAO):
@@ -34,7 +33,7 @@ class UserDAO(BaseDAO):
         """        
         self.insert_many(self.table, data=data)
         
-    def get_user(self, **kwargs) -> Optional[UserWithIdModel]:
+    def get_user(self, **kwargs) -> Optional[Any]:
         """ 
         ## Получение одного пользователя из базы данных по заданным условиям.
 
@@ -46,7 +45,7 @@ class UserDAO(BaseDAO):
         """
         return self.get_one(self.table, **kwargs)
 
-    def get_all_users(self, **kwargs):
+    def get_all_users(self, **kwargs) -> list[Any]:
         """ 
         ## Получение всех пользователей из базы данных по заданным условиям.
 

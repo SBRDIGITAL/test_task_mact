@@ -1,14 +1,7 @@
-import json
-
-from fastapi import Depends
 from fastapi.routing import APIRouter
 
-from dao.user_dao import user_dao
-from database.mapping.mapping_imports import UTM
-from models.users import ListUsersModel, ListUsersWithIdModel, UserWithIdModel, UserModel
+from models.users import ListUsersModel, ListUsersWithIdModel, UserModel
 
-from utils.pydantic_utils import PydanticUtils
-from utils.classes_utils import ClassesUtils
 from utils.endpoints_utils import EndpointsUtils
 
 
@@ -47,6 +40,8 @@ def create_users(users: ListUsersModel):
     return {"message": "Пользователи успешно добавлены в базу данных."}
 
 
+# Должна поддерживаться пагинация с возможностью указания количества записей
+# на страницу
 @router.get("/get_users", response_model=ListUsersWithIdModel)
 def get_users():
     """

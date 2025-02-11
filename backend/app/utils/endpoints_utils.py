@@ -22,7 +22,13 @@ class EndpointsUtils:
     
     @staticmethod
     def create_users(users: ListUsersModel) -> None:
-        """ ## Добавление пользователей в базу данных."""
+        """
+        ## Добавление пользователей в базу данных.
+        
+        Args:
+            users (ListUsersModel): `Pydantic` модель списка пользователей.
+        """
+        
         user_dao.insert_users(PydanticUtils.convert_to_list_dict(users.users))
     
     @staticmethod

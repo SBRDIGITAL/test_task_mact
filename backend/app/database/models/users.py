@@ -9,7 +9,8 @@ from database.models.column_creater import ColumnCreater
 class User:
     
     def __init__(self, metadata_obj: MetaData) -> None:
-        """_summary_
+        """
+        ## Инициализация объекта.
 
         Args:
             metadata_obj (MetaData): _description_
@@ -18,7 +19,7 @@ class User:
         self.user_table: Table = self.__register_user_model()
     
     def __register_user_model(self) -> None:
-        """ Создаёт модель таблицы пользователей. """   
+        """ ## Создаёт модель таблицы пользователей. """   
         return Table(
             TableNames.USERS.value,
             self.metadata_obj,
