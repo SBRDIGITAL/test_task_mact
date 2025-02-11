@@ -25,8 +25,9 @@ class RegisterModels:
     
     def __register_user_model(self) -> None:
         """ Регистрируем модель таблицы пользователей. """        
-        self.users_table = User(self.metadata_obj)
-        self.__update_metadata(self.users_table.metadata_obj)
+        self.user = User(self.metadata_obj)
+        self.users_table = self.user.user_table
+        self.__update_metadata(self.user.metadata_obj)
     
     def register(self) -> None:
         """ Регистрирует модели таблиц. """        

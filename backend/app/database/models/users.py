@@ -22,8 +22,8 @@ class User:
         return Table(
             TableNames.USERS.value,
             self.metadata_obj,
-            ColumnCreater.get_primary_key_bigint_column(UTM.ID),
-            ColumnCreater.get_string_type_column(UTM.FIRST_NAME),
-            ColumnCreater.get_string_type_column(UTM.LAST_NAME),
-            ColumnCreater.get_string_type_column(UTM.NICKNAME, 50),
+            ColumnCreater.get_primary_key_int_column(UTM.ID),
+            ColumnCreater.get_string_type_column(UTM.FIRST_NAME, nullable=True),
+            ColumnCreater.get_string_type_column(UTM.LAST_NAME, nullable=True),
+            ColumnCreater.get_string_type_column(UTM.NICKNAME, 50, nullable=False, unique=True),
         )

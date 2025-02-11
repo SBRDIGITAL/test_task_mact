@@ -1,6 +1,6 @@
 from fastapi import Depends
 
-from models.data_travel import ListUsersModel
+from models.users import ListUsersModel
 
 
 
