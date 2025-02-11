@@ -4,8 +4,12 @@ from fastapi import Depends
 from fastapi.routing import APIRouter
 
 from dao.user_dao import user_dao
+from database.mapping.mapping_imports import UTM
 from models.users import ListUsersModel, ListUsersWithIdModel, UserWithIdModel, UserModel
+
 from utils.pydantic_utils import PydanticUtils
+from utils.classes_utils import ClassesUtils
+from utils.endpoints_utils import EndpointsUtils
 
 
 
@@ -13,35 +17,42 @@ router = APIRouter(prefix='/data_travel', tags=["data_travel"])
 
 
 
-@router.post("/create_user")
+@router.post("/create_user", response_model=dict)
 def create_user(user: UserModel):
-    user_dao.insert_user(**user.model_dump())
-    return user
+    """
+    ## Добавление пользователя в базу данных.
+
+    Args:
+        user (UserModel): Модель пользователя.
+
+    Returns:
+        dict: сообщение об успешном добавлении пользователя в базу данных.
+    """    
+    EndpointsUtils.create_user(user)
+    return {"message": "Пользователь успешно добавлен в базу данных."}
 
 
-@router.post("/create_users", response_model=ListUsersModel)
+@router.post("/create_users", response_model=dict)
 def create_users(users: ListUsersModel):
     """
     ## Добавление пользователей в базу данных.
 
     Args:
-        users (ListUsersModel): _description_
+        users (ListUsersModel): Модель списка пользователей.
 
     Returns:
-        _type_: _description_
+        dict: сообщение об успешном добавлении пользователей в базу данных.
     """
-    user_dao.insert_users(PydanticUtils.convert_to_list_dict(users.users))
-    return users
+    EndpointsUtils.create_users(users)
+    return {"message": "Пользователи успешно добавлены в базу данных."}
 
 
 @router.get("/get_users", response_model=ListUsersWithIdModel)
 def get_users():
-    """_summary_
+    """
+    ## Получение всех пользователей из базы данных.
 
     Returns:
-        _type_: _description_
-    """    
-    user = UserWithIdModel(user_id=0, first_name='Юзер', last_name='Юзеров', nickname='user')
-    users = ListUsersWithIdModel(users=[user])
-    print(f'{users=}')
-    return users
+        ListUsersWithIdModel: Модель списка найденных пользователей.
+    """
+    return EndpointsUtils.get_all_users()

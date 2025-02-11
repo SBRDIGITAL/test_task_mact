@@ -1,22 +1,33 @@
-from typing import Type, TypeVar, Generic, List, Optional
-
-from sqlalchemy import Engine, Table
-from sqlalchemy import insert
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
+from sqlalchemy import Engine, Table
+from sqlalchemy import select, insert
+from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.exc import IntegrityError, NoResultFound
+
 from database.sessions.sqlite_engine import engine
-from database.tables.tables_data import Tables, metadata_obj
+from database.tables.tables_data import metadata_obj
 
 
 
-class DataBaseCRUD:
+class DataBaseManager:
+    """
+    ## Менеджер для работы с базой данных.
     
+    ### Args:
+        engine (Engine): Объект подключения к базе данных.
+    
+    ### Может:
+        - создавать таблицы.
+        - удалять таблицы.
+        - возращать сессию для работы.
+    """
     def __init__(self, engine: Engine) -> None:
         """ ## Инициализация класса. """
         self.engine = engine
+        self.session = self.get_session()
     
     def __create_tables(self) -> None:
         """ ## Создание таблиц в базе данных. """
@@ -33,10 +44,28 @@ class DataBaseCRUD:
         else:
             self.__create_tables()
 
+    def get_session(self) -> Session:
+        """ ## Получение сессии для работы с базой данных. """
+        Session = sessionmaker(bind=self.engine)
+        return Session()
+
+
+
+class DataBaseCRUD(DataBaseManager):
+    """ 
+    ## `CRUD` для работы с базой данных.
+    
+    Args:
+        engine (Engine): Объект подключения к базе данных.
+    """
+    def __init__(self, engine: Engine = engine) -> None:
+        """ ## Инициализация класса. """
+        super().__init__(engine)
+
     def insert_one(self, table: Table, **kwargs) -> BaseModel:
         """ ## Добавление одной записи в базу данных. """
         try:
-            with self.get_session() as session:
+            with self.session as session:
                 with session.begin():
                     stmt = insert(table).values(**kwargs)
                     session.execute(stmt)
@@ -48,7 +77,8 @@ class DataBaseCRUD:
             raise ex
     
     def insert_many(self, table: Table, data: list[dict]) -> None:
-        """ ## Пакетная вставка записей в базу данных.
+        """
+        ## Пакетная вставка записей в базу данных.
         
         Args:
             table (Table): SQLAlchemy объект таблицы.
@@ -58,7 +88,7 @@ class DataBaseCRUD:
             return  # Нечего вставлять
 
         try:
-            with self.get_session() as session:
+            with self.session as session:
                 with session.begin():
                     stmt = insert(table)
                     session.execute(stmt, data)  # Передаём список словарей
@@ -69,9 +99,50 @@ class DataBaseCRUD:
         except Exception as ex:
             raise ex
     
-    def get_session(self) -> Session:
-        """ ## Получение сессии для работы с базой данных. """
-        return Session(bind=self.engine)
+    def get_one(self, table: Table, **kwargs) -> Optional[Any]:
+        """
+        ## Получение одной записи из базы данных по заданным условиям.
+        
+        Args:
+            table (Table): SQLAlchemy объект таблицы.
+            **kwargs: Условия для фильтрации записи.
+        
+        Returns:
+            Optional[Any]: Найденная запись или None, если запись не найдена.
+        """
+        try:
+            with self.session as session:
+                stmt = select(table).filter_by(**kwargs)
+                result = session.execute(stmt).scalar_one_or_none()  # Получаем одну запись или None
+                return result
+
+        except NoResultFound:
+            return None  # Если запись не найдена, возвращаем None
+
+        except Exception as ex:
+            raise ex
     
-    
+    def get_many(self, table: Table, **kwargs) -> list[Any]:
+        """
+        ## Получение нескольких записей из базы данных по заданным условиям.
+        
+        Args:
+            table (Table): SQLAlchemy объект таблицы.
+            **kwargs: Условия для фильтрации записей.
+        
+        Returns:
+            list[Any]: Список найденных записей.
+        """
+        try:
+            with self.session as session:
+                with session.begin():
+                    stmt = select(table).filter_by(**kwargs)
+                    results = session.execute(stmt).fetchall()# .scalars().all()  # Получаем все записи
+                    return results
+
+        except Exception as ex:
+            raise ex
+
+
+
 db_crud = DataBaseCRUD(engine)
