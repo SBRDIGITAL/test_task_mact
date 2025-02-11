@@ -55,7 +55,7 @@ class UserDAO(BaseDAO):
         Returns:
             ListUsersWithIdModel: Список найденных пользователей.
         """
-        return self.get_many(self.table, **kwargs)
+        return self.get_all(self.table, **kwargs)
 
 
   

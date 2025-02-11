@@ -134,9 +134,9 @@ class DataBaseCRUD(DataBaseManager):
         except Exception as ex:
             raise ex
     
-    def get_many(self, table: Table, **kwargs) -> list[Any]:
+    def get_all(self, table: Table, **kwargs) -> list[Any]:
         """
-        ## Получение нескольких записей из базы данных по заданным условиям.
+        ## Получение всех записей из базы данных по заданным условиям.
         
         Args:
             table (Table): SQLAlchemy объект таблицы.
@@ -149,7 +149,7 @@ class DataBaseCRUD(DataBaseManager):
             with self.session as session:
                 with session.begin():
                     stmt = select(table).filter_by(**kwargs)
-                    results = session.execute(stmt).fetchall()# .scalars().all()  # Получаем все записи
+                    results = session.execute(stmt).fetchall()
                     return results
 
         except Exception as ex:

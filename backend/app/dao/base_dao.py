@@ -43,7 +43,7 @@ class BaseDAO:
         """
         return self.db.get_one(table=table, **kwargs)
 
-    def get_many(self, table: Table, **kwargs) -> list[Any]:
+    def get_all(self, table: Table, **kwargs) -> list[Any]:
         """ 
         ## Получение нескольких записей из базы данных по заданным условиям.
 
@@ -54,7 +54,7 @@ class BaseDAO:
         Returns:
             list[Any]: Список найденных записей.
         """
-        return self.db.get_many(table=table, **kwargs)
+        return self.db.get_all(table=table, **kwargs)
        
         
         
