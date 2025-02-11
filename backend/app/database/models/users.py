@@ -13,7 +13,11 @@ class User:
         ## Инициализация объекта.
 
         Args:
-            metadata_obj (MetaData): _description_
+            metadata_obj (MetaData): объект метаданных.
+        
+        Attributes:
+            metadata_obj (MetaData): объект метаданных.
+            user_table (Table): таблица пользователей.
         """        
         self.metadata_obj = metadata_obj
         self.user_table: Table = self.__register_user_model()

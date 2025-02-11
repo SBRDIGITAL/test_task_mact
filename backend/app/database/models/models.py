@@ -16,7 +16,16 @@ empty_metadata_obj: MetaData = mapper_registry.metadata
 class RegisterModels:
     
     def __init__(self, metatadata_obj: MetaData) -> None:
-        """ ## Инициализирует объекты. """
+        """
+        ## Инициализирует объекты.
+        
+        Args:
+            metatadata_obj (MetaData): объект метаданных.
+            
+        Attributes:
+            metadata_obj (MetaData): объект метаданных.
+            users_table (Optional[Table]): таблица пользователей.
+        """
         self.metadata_obj = metatadata_obj
         self.users_table: Optional[Table] = None
 

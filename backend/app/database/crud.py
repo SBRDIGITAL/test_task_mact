@@ -1,7 +1,5 @@
 from typing import Any, Optional
 
-from pydantic import BaseModel
-
 from sqlalchemy import Engine, Table
 from sqlalchemy import select, insert
 from sqlalchemy.orm import sessionmaker, Session
@@ -19,13 +17,17 @@ class DataBaseManager:
     ### Args:
         engine (Engine): Объект подключения к базе данных.
     
+    ### Attributes:
+        engine (Engine): Объект подключения к базе данных.
+        session (Session): Сессия для работы с базой данных.
+    
     ### Может:
         - создавать таблицы.
         - удалять таблицы.
         - возращать сессию для работы.
     """
     def __init__(self, engine: Engine) -> None:
-        """ ## Инициализация класса. """
+        """ ## Инициализация класса."""
         self.engine = engine
         self.session = self.get_session()
     
@@ -57,13 +59,23 @@ class DataBaseCRUD(DataBaseManager):
     
     Args:
         engine (Engine): Объект подключения к базе данных.
+    
+    Attributes:
+        engine (Engine): Объект подключения к базе данных.
+        session (Session): Сессия для работы с базой данных.
     """
     def __init__(self, engine: Engine = engine) -> None:
         """ ## Инициализация класса. """
         super().__init__(engine)
 
-    def insert_one(self, table: Table, **kwargs) -> BaseModel:
-        """ ## Добавление одной записи в базу данных. """
+    def insert_one(self, table: Table, **kwargs) -> None:
+        """
+        ## Добавление одной записи в базу данных.
+        
+        Args:
+            table (Table): SQLAlchemy объект таблицы.
+            **kwargs: Поля и значения для вставки.
+        """
         try:
             with self.session as session:
                 with session.begin():

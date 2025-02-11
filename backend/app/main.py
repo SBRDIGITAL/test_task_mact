@@ -22,7 +22,12 @@ from routers.data_travel import router as data_travel_router
 class FastAPIapp:
     
     def __init__(self) -> None:
-        """ ## Инициализация приложения. """
+        """
+        ## Инициализация приложения. 
+        
+        Attributes:
+            app (FastAPI): объект FastAPI.
+        """
         self.app = FastAPI()
         self.__post_init()
         
