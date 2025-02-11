@@ -1,9 +1,10 @@
-from typing import Dict
+from typing import Dict, List, Optional, Union
+
 from pydantic import BaseModel, field_validator
 
 
 class UserModel(BaseModel):
-    user_id: int
+    user_id: Optional[int]
     first_name: str
     last_name: str
     nickname: str
@@ -16,10 +17,10 @@ class UserModel(BaseModel):
     
     
 class ListUsersModel(BaseModel):
-    users: Dict[str, UserModel]  # Используйте Dict для хранения пользователей по user_id
+    users: List[UserModel]  # Используйте Dict для хранения пользователей по user_id
     
     @field_validator('users')
     def check_users(cls, value):
         if not value:
-            raise ValueError('Список пользователей не должен быть пустым')
+            raise ValueError('Объект пользователей не должен быть пустым')
         return value
