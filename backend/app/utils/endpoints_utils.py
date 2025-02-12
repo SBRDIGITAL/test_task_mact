@@ -31,8 +31,8 @@ class EndpointsUtils:
         
         user_dao.insert_users(PydanticUtils.convert_to_list_dict(users.users))
     
-    @staticmethod
-    def get_all_users() -> ListUsersWithIdModel:
+    @classmethod
+    def get_all_users(cls) -> ListUsersWithIdModel:
         """
         ## Получение всех пользователей из базы данных.
 
@@ -42,4 +42,22 @@ class EndpointsUtils:
         get_users = user_dao.get_all_users()
         users_mapping_keys = ClassesUtils.get_attrs_names_from_class(UTM)
         result = PydanticUtils.transform_data_to_model(get_users, users_mapping_keys, UserWithIdModel)
-        return ListUsersWithIdModel(users=result) if isinstance(result, list) else ListUsersWithIdModel(users=[result])
+        return ListUsersWithIdModel(total_count=len(result), users=result)
+
+    @classmethod
+    def get_users(cls, page: int, page_size: int):
+        """
+        ## Получение пользователей из базы данных с пагинацией.
+
+        Args:
+            page (int): номер страницы пагинации.
+            page_size (int): максимальное количество элементов на страницу.
+        
+        Returns:
+            ListUsersWithIdModel: пользователи для текущей страницы.
+        """
+        all_users = cls.get_all_users()
+        start_index = (page - 1) * page_size  # Вычисляем начальный и конечный индексы для среза
+        end_index = start_index + page_size
+        paginated_users = all_users.users[start_index:end_index]
+        return ListUsersWithIdModel(total_count=len(paginated_users), users=paginated_users)

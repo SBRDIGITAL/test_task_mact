@@ -54,6 +54,7 @@ class UserWithIdModel(UserId):
     
 class ListUsersWithIdModel(BaseModel):
     """ ## Модель списка пользователей С ИДЕНТИФИКАТОРОМ. """
+    total_count: int
     users: List[UserWithIdModel]  # Используйте Dict для хранения пользователей по user_id
     
     # @field_validator('users')

@@ -29,7 +29,7 @@ class PydanticUtils:
             raise ValueError('Ошибка преобразования данных в список словарей.')
 
     @staticmethod
-    def transform_data_to_model(data: List[tuple], keys: List[str], model: Type[BaseModel]) -> Union[BaseModel, List[BaseModel]]:
+    def transform_data_to_model(data: List[tuple], keys: List[str], model: Type[BaseModel]) -> List[BaseModel]:
         """
         Преобразует данные в список словарей и создает список экземпляров модели Pydantic.
 
@@ -44,10 +44,6 @@ class PydanticUtils:
             result = PydanticUtils.transform_data_to_model(get_users, users_mapping_keys, UserWithIdModel)
 
         Returns:
-            Union[BaseModel, List[BaseModel]]: Либо список экземпляров модели Pydantic, либо один экземпляр.
+            List[BaseModel]: Список экземпляров модели Pydantic.
         """
-        instances = [model(**dict(zip(keys, user))) for user in data]  # Создание списка экземпляров модели
-
-        if len(instances) == 1:
-            return instances[0]  # Если только один объект, возвращаем его без списка
-        return instances  # Возвращаем список экземпляров моделей
+        return [model(**dict(zip(keys, user))) for user in data]  # Создание списка экземпляров модели

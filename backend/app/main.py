@@ -6,15 +6,11 @@ from fastapi import FastAPI
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from database.crud import db_crud
-from routers.data_travel import router as data_travel_router
+from routers.users import router as users_router
 
 
 
 """ 
-1. Написать пагинацию с возможностью указания количества записей на странице у ендпоинта для получения данных на FastAPI
-2. Написать экспепшены
-3. Написать коды ошибок и вынести в отдельный файл
-4. Написать логгирование
 5. Написать тесты
 """
 
@@ -29,14 +25,28 @@ class FastAPIapp:
         Attributes:
             app (FastAPI): объект FastAPI.
         """
-        self.app = FastAPI()
-        self.__post_init()
+        self.app = FastAPI(lifespan=self.lifespan)
         
     def __post_init(self) -> None:
-        """ ## Основные настройки приложения. """
+        """
+        ## Основные настройки приложения.
+        
+        Подключает роутеры, устанавливает соединение с базой данных.
+        """
         self.__include_routers()
         self.__start_db()
-        self.__start()
+
+    def lifespan(self, app: FastAPI):
+        """
+        ## Вызывается во время жизненного цикла приложения.
+        
+        Запускает подключение к базе данных и возвращает управление приложению.
+
+        ### Args:
+            app (FastAPI): Экземпляр `FastAPI`.
+        """
+        self.__post_init()
+        yield
     
     def __start_db(self) -> None:
         """ ## Запуск работы с базой данных. """
@@ -44,12 +54,8 @@ class FastAPIapp:
     
     def __include_routers(self) -> None:
         """ ## Подключение роутеров. """
-        self.app.include_router(data_travel_router)
+        self.app.include_router(users_router)
     
-    def __start(self):
-        """ ## Запуск приложения. """
-        yield self.app
-
 
 
 fast_api_app = FastAPIapp()
