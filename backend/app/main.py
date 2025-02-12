@@ -11,7 +11,8 @@ from routers.users import router as users_router
 
 
 """ 
-5. Написать тесты
+1. Написать тесты (как минимум 3 теста).
+2. Упаковать сервер в `.exe` с опцией onedir.
 """
 
 

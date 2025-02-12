@@ -21,10 +21,10 @@ router = APIRouter(prefix='/users', tags=["Пользователи"])
 #     """
 #     ## Добавление пользователя в базу данных.
 
-#     Args:
-#         user (UserModel): Модель пользователя.
+#     ### Args:
+#         user (UserModel): модель пользователя.
 
-#     Returns:
+#     ### Returns:
 #         JSONResponse: сообщение об успешном добавлении пользователя в базу данных.
 #     """
 #     try:
@@ -42,10 +42,10 @@ def create_users(users: ListUsersModel) -> JSONResponse:
     """
     ## Добавление пользователей в базу данных.
 
-    Args:
-        users (ListUsersModel): Модель списка пользователей.
+    ### Args:
+        users (ListUsersModel): модель списка пользователей.
 
-    Returns:
+    ### Returns:
         JSONResponse: сообщение об успешном добавлении пользователей в базу данных.
     """
     try:
@@ -62,12 +62,12 @@ def get_users(page: int = Query(1, ge=1), page_size: int = Query(5, ge=1)) -> Li
     """
     ## Получение с использованием пагинации пользователей из базы данных.
 
-    Args:
+    ### Args:
         page (int): номер страницы пагинации.
         page_size (int): максимальное количество элементов на страницу.
         
-    Returns:
-        ListUsersWithIdModel: Список найденных в базе данных пользователей.
+    ### Returns:
+        ListUsersWithIdModel: список найденных в базе данных пользователей.
     """
     try:
         return EndpointsUtils.get_users(page, page_size)
