@@ -23,7 +23,7 @@ class AppExceptionsHandlers:
             cls.__general_exception_handler(exc)
     
     @classmethod
-    def __general_exception_handler(cls, exc: Exception) -> JSONResponse:
+    def __general_exception_handler(cls, exc: Exception) -> None:
         """
         ## Обработчик общих исключений.
 
@@ -32,14 +32,11 @@ class AppExceptionsHandlers:
 
         Args:
             exc (Exception): Исключение, которое было выброшено в процессе обработки запроса.
-
-        Returns:
-            JSONResponse: Ответ с кодом состояния 500 и сообщением о внутренней ошибке сервера.
         """
         print_exc()
 
     @classmethod
-    def __http_exception_handler(cls, exc: HTTPException) -> JSONResponse:
+    def __http_exception_handler(cls, exc: HTTPException) -> None:
         """
         ## Обработчик HTTP исключений.
 
@@ -51,9 +48,5 @@ class AppExceptionsHandlers:
         Args:
             exc (HTTPException): Исключение, которое было выброшено в процессе обработки запроса, 
                 содержащее информацию о статусе и сообщении.
-
-        Returns:
-            JSONResponse: Ответ с кодом состояния, установленным в исключении,
-            и сообщением об ошибке.
         """
         print_exc()
