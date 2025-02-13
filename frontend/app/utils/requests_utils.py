@@ -6,7 +6,6 @@ from config.literals import AppLiterals as AL
 from config.api.endpoints_config import EndpointsConfig as EC
 from config.api.api_config import api_config, ApiConfig
 
-from models.api_models import AllowEndpoint
 from exceptions.exception_handler import AppExceptionsHandlers as AXH
 
 
@@ -35,7 +34,24 @@ class RequesterHelpers:
 
 class Requester:
     
-    def __init__(self, api_config: ApiConfig):
+    def __init__(self, api_config: ApiConfig) -> None:
+        """
+        ## Класс для отправки запросов на `API`.
+
+        Args:
+            api_config (ApiConfig): объект конфигурации клиента `API`.
+        
+        Attributes:
+            api_config (ApiConfig): объект конфигурации клиента `API`.
+            rh (RequesterHelpers): объект класса помощника.
+                    
+        Пример использования:
+        ```python
+            api_config = ApiConfig(proto='http', base_url='127.0.0.1:8000')
+            requester = Requester(api_config)
+            users = requester.send_request(method='GET', router='users', endpoint='get_users')
+        ```
+        """        
         self.api_config: ApiConfig = api_config
         self.rh = RequesterHelpers(self.api_config)
     
@@ -44,19 +60,43 @@ class Requester:
         router: EC.allow_routers,
         endpoint: EC.allow_endpoints,
         data: Optional[dict] = None
-    ) -> Optional[dict]:
+    ) -> dict:
         """
-        ## _summary_
+        ## Отправляет запрос к `API`.
 
-        Args:
-            method (AL.RequestsMethod): _description_
-            router (EC.allow_routers): _description_
-            endpoint (EC.allow_endpoints): _description_
-            data (Optional[dict], optional): _description_. Defaults to None.
+        Этот метод формирует и отправляет HTTP-запрос к указанному `API`,
+        используя заданный метод, роутер и конечную точку.
+        В зависимости от метода, запрос может быть `GET` или `POST`. 
 
-        Returns:
-            Optional[dict]: _description_
-        """        
+        ### Args:
+            method (AL.RequestsMethod): Метод HTTP-запроса, который будет использоваться. 
+                Может быть `'GET'` или `'POST'`.
+                
+            router (EC.allow_routers): Роутер, к которому будет отправлен запрос. 
+                Должен соответствовать одному из разрешенных роутеров.
+                
+            endpoint (EC.allow_endpoints): Конечная точка `API`, к которой будет отправлен запрос. 
+                Должна соответствовать одному из разрешенных эндпоинтов.
+                
+            data (Optional[dict], optional): Данные, которые будут отправлены в теле запроса. 
+                Используется только для `'POST'`-запросов. По умолчанию None.
+
+        ### Returns:
+            dict: Ответ от `API` в формате `JSON`, если запрос выполнен успешно.
+
+        ### Пример использования:
+        ```python
+            response = requester.send_request(method='GET', router='users', endpoint='get_users')
+            if response:
+                print(response)
+            else:
+                print("Ошибка при получении данных.")
+        ```
+
+        ### Raises:
+            Exception:
+                В случае возникновения ошибки при выполнении запроса, будет вызван метод обработки исключений.
+        """      
         try:
             url = self.rh.get_full_url_for_request(router, endpoint)
             print(f'{url=}')
@@ -65,7 +105,7 @@ class Requester:
             else:
                 res = requests.post(url, json=data)
             
-            return res.json() if res else None
+            return res.json()
             
         except Exception as ex:
             AXH.get_exception(ex)

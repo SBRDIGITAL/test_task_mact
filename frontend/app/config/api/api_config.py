@@ -12,6 +12,14 @@ from exceptions.exception_handler import AXH
 class ApiConfig(EndpointsConfig):
     
     def __init__(self, proto: AL.Proto, base_url: str) -> None:
+        """
+        ## Конфигурация `API` клиента.
+        
+        Пример использования:
+            ```python
+                api_config = ApiConfig(proto='http', base_url='127.0.0.1:8000')
+            ```
+        """
         self.proto: AL.Proto = proto
         self.base_url: str = base_url
         self.__post_init()
@@ -56,4 +64,3 @@ class ApiConfig(EndpointsConfig):
 
 
 # api_config = ApiConfig(proto='http', base_url='localhost:8000')
-api_config = ApiConfig(proto='http', base_url='127.0.0.1:8000')

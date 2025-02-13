@@ -8,7 +8,12 @@ from utils.requests_utils import Requester
 
 
 
+api_config = ApiConfig(proto='http', base_url='127.0.0.1:8000')
 requester = Requester(api_config)
 users = requester.send_request(method='GET', router='users', endpoint='get_users')
-print(f'{users=}')
-print(f'{type(users)=}')
+
+
+if __name__ == '__main__':
+    users = requester.send_request(method='GET', router='users', endpoint='get_users')
+    print(f'{users=}')
+    print(f'{type(users)=}')
