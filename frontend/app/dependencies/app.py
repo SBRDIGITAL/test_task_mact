@@ -8,6 +8,8 @@ from PyQt6.QtWidgets import QWidget, QMessageBox
 from config.api.api_config import ApiConfig
 from utils.requests_utils import Requester
 
+from config.literals import AppLiterals as AL
+
 from .ui_helper import UIHelper
 
 
@@ -16,7 +18,7 @@ class MyApp(QWidget):
     """
     ## Основной класс приложения, реализующий графический интерфейс и взаимодействие с `API`.
     """
-    def __init__(self) -> None:
+    def __init__(self, proto: AL.Proto, base_url: str) -> None:
         """
         ## Инициализирует объект `MyApp`.
         
@@ -24,12 +26,12 @@ class MyApp(QWidget):
         """          
         super().__init__()
         
-        self.click_count = 0
-        self.api_config = ApiConfig(proto='http', base_url='127.0.0.1:8000')
-        self.requester = Requester(self.api_config)
-        self.data_getted = False
+        self.click_count: int = 0
+        self.data_getted: bool = False
         self.current_widget: Optional[QWidget] = None
         self.ui_helper: Optional[UIHelper] = None
+        self.api_config = ApiConfig(proto, base_url)
+        self.requester = Requester(self.api_config)
         self.initUI()
 
     def initUI(self) -> None:
@@ -67,26 +69,33 @@ class MyApp(QWidget):
         Извлекает данные из поля ввода, проверяет их и отправляет `POST`-запрос.
         В случае успеха отображает сообщение, иначе предупреждение или ошибку.
         """       
-        self.click_count += 1
-        text = self.ui_helper.line_edit.text().strip()
-
-        if not text:
-            QMessageBox.warning(self, 'Ошибка', 'Поле ввода не может быть пустым.')
-            return
-
-        current_time = datetime.now()
-
-        data = {
-            "users": [
-                {
-                    "first_name": text.split()[0] if " " in text else text,  # Разбиваем строку на имя и фамилию
-                    "last_name": text.split()[1] if " " in text else None,
-                    "nickname": text.split()[2] if " " in text else f"user_{current_time.strftime('%H%M%S')}"
-                }
-            ]
-        }
-
         try:
+            self.click_count += 1
+            text = self.ui_helper.line_edit.text().strip()
+
+            if not text:
+                QMessageBox.warning(self, 'Ошибка', 'Поле ввода не может быть пустым.')
+                return
+
+            current_time = datetime.now()
+            splitted_text = text.split()
+            
+            try:  # получаем никнейм, либо генерим его
+                nick_name = splitted_text[3]
+            except IndexError:
+                nick_name = f"user_{current_time.strftime('%H%M%S')}"
+            
+            print(f'{splitted_text=}')
+            data = {
+                "users": [
+                    {
+                        "first_name": splitted_text[0] if " " in text else text,  # Разбиваем строку на имя и фамилию
+                        "last_name": splitted_text[1] if " " in text else None,
+                        "nickname": nick_name
+                    }
+                ]
+            }
+
             response = self.requester.send_request(method='POST', router='users', endpoint='create_users', data=data)
             if response and response.get('status') == 200:  
                 QMessageBox.information(self, '✅', 'Пользователь успешно создан!')
