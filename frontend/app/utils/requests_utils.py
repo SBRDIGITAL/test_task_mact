@@ -59,7 +59,8 @@ class Requester:
         method: AL.RequestsMethod,
         router: EC.allow_routers,
         endpoint: EC.allow_endpoints,
-        data: Optional[dict] = None
+        data: Optional[dict] = None,
+        params: Optional[dict] = None
     ) -> dict:
         """
         ## Отправляет запрос к `API`.
@@ -80,6 +81,8 @@ class Requester:
                 
             data (Optional[dict], optional): Данные, которые будут отправлены в теле запроса. 
                 Используется только для `'POST'`-запросов. По умолчанию None.
+                
+            params (Optional[dict], optional): Параметры для запроса.
 
         ### Returns:
             dict: Ответ от `API` в формате `JSON`, если запрос выполнен успешно.
@@ -101,9 +104,9 @@ class Requester:
             url = self.rh.get_full_url_for_request(router, endpoint)
             print(f'{url=}')
             if method == 'GET':
-                res = requests.get(url, json=data)
+                res = requests.get(url, json=data, params=params)
             else:
-                res = requests.post(url, json=data)
+                res = requests.post(url, json=data, params=params)
             
             return res.json()
             
