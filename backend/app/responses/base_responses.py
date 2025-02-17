@@ -1,51 +1,43 @@
-from fastapi import status
-from fastapi.responses import JSONResponse
+from models.responses import SomeMessage
 
 
 
 class ResponsesHelper:
     
-    def get_message(self, msg: str, msg_key: str = "message") -> dict[str, str]:
+    def get_message(self, msg: str) -> SomeMessage:
         """
         ## Возвращает словарь с ключом и значением.
 
         Args:
             msg (str): значение.
-            msg_key (str): ключ. Defaults to "message".
 
         Returns:
             dict[str, str]: словарь с ключом и значением для ответа
         """        
-        return {msg_key: msg}
+        return SomeMessage(message=msg)
 
 
 class UserResponses(ResponsesHelper):
     
     @property
-    def get_ok_created_user(self) -> JSONResponse:
+    def get_ok_created_user(self) -> SomeMessage:
         """
-        ## Возвращает JSON ответ об успешном добавлении одного пользователя.
+        ## Возвращает ответ об успешном добавлении одного пользователя.
 
         Returns:
-            JSONResponse: объект ответа.
-        """        
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content=self.get_message("Пользователь успешно добавлен в базу данных.")
-        )
+            SomeMessage: объект ответа.
+        """
+        return self.get_message("Пользователь успешно добавлен в базу данных.")
     
     @property
-    def get_ok_created_userS(self) -> JSONResponse:
+    def get_ok_created_userS(self) -> SomeMessage:
         """
-        ## Возвращает JSON ответ об успешном добавлении пользователей.
+        ## Возвращает `JSON` ответ об успешном добавлении пользователей.
 
         Returns:
-            JSONResponse: объект ответа.
-        """        
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content=self.get_message("Пользователи успешно добавлены в базу данных.")
-        )
+            SomeMessage: объект ответа.
+        """
+        return self.get_message("Пользователи успешно добавлены в базу данных.") 
 
 
 

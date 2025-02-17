@@ -4,7 +4,7 @@ import requests
 from config.literals import AppLiterals as AL
 
 from config.api.endpoints_config import EndpointsConfig as EC
-from config.api.api_config import api_config, ApiConfig
+from config.api.api_config import ApiConfig
 
 from exceptions.exception_handler import AppExceptionsHandlers as AXH
 

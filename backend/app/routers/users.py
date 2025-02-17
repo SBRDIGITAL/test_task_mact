@@ -1,6 +1,5 @@
 from fastapi import Query, HTTPException
 from fastapi.routing import APIRouter
-from fastapi.responses import JSONResponse
 
 from utils.endpoints_utils import EndpointsUtils
 from responses.base_responses import user_responses
@@ -9,6 +8,7 @@ from exceptions.base_exceptions import AppExceptions
 from exceptions.exception_handler import AppExceptionsHandlers
 
 from models.users import ListUsersModel, ListUsersWithIdModel, UserModel
+from models.responses import SomeMessage
 
 
 
@@ -16,29 +16,29 @@ router = APIRouter(prefix='/users', tags=["Пользователи"])
 
 
 
-# @router.post("/create_user")
-# def create_user(user: UserModel) -> JSONResponse:
-#     """
-#     ## Добавление пользователя в базу данных.
+@router.post("/create_user", response_model=SomeMessage)
+def create_user(user: UserModel) -> SomeMessage:
+    """
+    ## Добавление пользователя в базу данных.
 
-#     ### Args:
-#         user (UserModel): модель пользователя.
+    ### Args:
+        user (UserModel): модель пользователя.
 
-#     ### Returns:
-#         JSONResponse: сообщение об успешном добавлении пользователя в базу данных.
-#     """
-#     try:
-#         EndpointsUtils.create_user(user)
-#         return user_responses.get_ok_created_user
+    ### Returns:
+        SomeMessage: сообщение об успешном добавлении пользователя в базу данных.
+    """
+    try:
+        EndpointsUtils.create_user(user)
+        return user_responses.get_ok_created_user
     
-#     except (Exception, HTTPException) as ex:
-#         AppExceptionsHandlers.get_exception(ex)
-#         raise AppExceptions.CSU
+    except (Exception, HTTPException) as ex:
+        AppExceptionsHandlers.get_exception(ex)
+        raise AppExceptions.CSU
         
 
 
-@router.post("/create_users")
-def create_users(users: ListUsersModel) -> JSONResponse:
+@router.post("/create_users", response_model=SomeMessage)
+def create_users(users: ListUsersModel) -> SomeMessage:
     """
     ## Добавление пользователей в базу данных.
 
@@ -46,11 +46,11 @@ def create_users(users: ListUsersModel) -> JSONResponse:
         users (ListUsersModel): модель списка пользователей.
 
     ### Returns:
-        JSONResponse: сообщение об успешном добавлении пользователей в базу данных.
+        SomeMessage: сообщение об успешном добавлении пользователей в базу данных.
     """
     try:
         EndpointsUtils.create_users(users)
-        return user_responses.get_ok_created_userS
+        return user_responses.get_ok_created_userS  # сделать возврат через Pydantic модель
     
     except (Exception, HTTPException) as ex:
         AppExceptionsHandlers.get_exception(ex)
