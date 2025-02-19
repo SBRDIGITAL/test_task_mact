@@ -1,6 +1,10 @@
+from typing import Optional
+from datetime import datetime
+import pytest
+
 from asyncio import run
-from traceback import print_exc
 from types import NoneType
+from traceback import print_exc
 
 from aiohttp_client.app.app import AsyncHttpClient
 
@@ -10,33 +14,48 @@ class ApiClient:
     """
     ## Класс ApiClient для взаимодействия с `API`.
 
+    Этот класс предоставляет методы для выполнения запросов к `API`, включая получение списка пользователей.
+
     Attributes:
         BASE_URL (str): Базовый URL для API.
         USERS_ROUTER (str): Путь к маршруту пользователей.
         client (AsyncHttpClient): Экземпляр клиента для выполнения `HTTP`-запросов.
     """
-    BASE_URL = 'http://127.0.0.1:8000/'
-    USERS_ROUTER = 'users/'
+    BASE_URL = "http://127.0.0.1:8000/"
+    USERS_ROUTER = "users/"
     client = AsyncHttpClient()
     
     @classmethod
-    async def get_users(cls, endpoint: str = 'get_users') -> dict:
+    async def insert_users(cls, endpoint: str = "create_users", data: Optional[dict] = None):
+        try:
+            return await cls.client.fetch(
+                url=f'{cls.BASE_URL}{cls.USERS_ROUTER}{endpoint}',
+                method="POST", mode="JSON", json=data
+            )
+        
+        except Exception as ex:
+            raise ex
+    
+    @classmethod
+    async def get_users(cls, endpoint: str = "get_users") -> dict:
         """
         ## Получает список пользователей из `API`.
+        
+        Этот метод отправляет `GET`-запрос к `API` для получения списка пользователей.
 
         Args:
-            endpoint (str, optional): Конечная точка для получения пользователей. По умолчанию 'get_users'.
+            endpoint (str): Конечная точка для получения пользователей. По умолчанию 'get_users'.
 
         Raises:
             Exception: Если произошла ошибка при выполнении запроса.
 
         Returns:
-            dict: Ответ API, содержащий информацию о пользователях.
+            dict: Ответ `API`, содержащий информацию о пользователях.
         """        
         try:
             return await cls.client.fetch(
                 url=f'{cls.BASE_URL}{cls.USERS_ROUTER}{endpoint}',
-                method='GET', mode='JSON',
+                method="GET", mode="JSON",
             )
         
         except Exception as ex:
@@ -46,19 +65,25 @@ class ApiClient:
 class Tester:
     """
     ## Класс `Tester` для выполнения тестов `API`.
+
+    Этот класс содержит методы для тестирования функциональности `API`, 
+    включая проверку корректности данных, получаемых от `API`.
     """
-    
-    @classmethod
-    async def test_get_users(cls) -> None:
+    @pytest.mark.asyncio
+    async def test_get_users(self) -> None:
         """
         ## Тестирует метод `get_users` класса `ApiClient`.
 
+        Этот метод выполняет тестирование на корректность данных, получаемых 
+        из `API`, проверяя типы и значения полей.
+
         Raises:
-            AssertionError: Если проверки не проходят.
-        """       
+            AssertionError: Если проверки не проходят, выбрасывается ошибка 
+                утверждения с описанием проблемы.
+        """    
         res = await ApiClient.get_users()
-        total_count = res.get('total_count')
-        users = res.get('users')
+        total_count = res.get("total_count")
+        users = res.get("users")
         assert isinstance(res, dict), "Ответ должен быть словарем."
         assert isinstance(users, list), "Пользователи должны быть в виде списка."
         assert isinstance(total_count, int), "Общее количество должно быть целым числом."
@@ -70,20 +95,56 @@ class Tester:
             assert isinstance(user.get("last_name", None), (NoneType, str,)),  "Фамилия может быть NoneType или str"
             assert isinstance(user.get("nickname"), str), "Никнейм должен быть str"
     
-    @classmethod    
-    async def run_tests(cls) -> None:
+    @pytest.mark.asyncio
+    async def test_insert_users(self) -> None:
+        """
+        ## Тестирует метод `insert_users` класса `ApiClient`.
+
+        Этот метод выполняет тестирование функциональности добавления пользователей в 
+        базу данных через `API`. Он отправляет данные о пользователях и проверяет 
+        корректность ответа от `API`.
+
+        ### Raises:
+            AssertionError: Если проверки не проходят, выбрасывается ошибка 
+                утверждения с описанием проблемы.
+
+        ### Returns:
+            None
+        """   
+        data = {
+            "users": [
+                {
+                    "first_name": "tester",
+                    "last_name": "tester2",
+                    "nickname": f"nickname_{int(datetime.now().timestamp())}"
+                }
+            ]
+        }
+        res = await ApiClient.insert_users(data=data)
+        assert isinstance(res, dict), "Ответ должен быть словарём"
+        status = res.get('status')
+        assert isinstance(status, int), "Код ответа должен быть int"
+        if status != 200:
+            assert res.get("detail"), "Должно быть в ключе detail сообщение: 'Ошибка при сохранении пользователей.'"
+        assert status == 200, "Код ответа должен быть 200" 
+        assert res.get("message") == "Пользователи успешно добавлены в базу данных.", "Нет ответа о добавлении"
+        
+    
+    @pytest.mark.asyncio 
+    async def run_tests(self) -> None:
         """
         ## Запускает все тесты.
 
-        Returns:
-            None
+        Этот метод инициирует выполнение всех тестов, определённых в классе `Tester`.
         """      
-        await cls.test_get_users()
+        await self.test_get_users()
+        await self.test_insert_users()
 
 
 
 if __name__ == '__main__':
     try:
-        run(Tester.run_tests())
+        tester = Tester()
+        run(tester.run_tests())
     except:
         print_exc()
