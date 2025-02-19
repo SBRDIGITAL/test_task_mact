@@ -37,7 +37,7 @@ class ApiClient:
             raise ex
     
     @classmethod
-    async def get_users(cls, endpoint: str = "get_users") -> dict:
+    async def get_users(cls, endpoint: str = "get_users", params: Optional[dict] = None) -> dict:
         """
         ## Получает список пользователей из `API`.
         
@@ -45,6 +45,7 @@ class ApiClient:
 
         Args:
             endpoint (str): Конечная точка для получения пользователей. По умолчанию 'get_users'.
+            params (Optional[dict]): Параметры запроса.
 
         Raises:
             Exception: Если произошла ошибка при выполнении запроса.
@@ -55,7 +56,7 @@ class ApiClient:
         try:
             return await cls.client.fetch(
                 url=f'{cls.BASE_URL}{cls.USERS_ROUTER}{endpoint}',
-                method="GET", mode="JSON",
+                method="GET", mode="JSON", params=params
             )
         
         except Exception as ex:
@@ -128,7 +129,26 @@ class Tester:
             assert res.get("detail"), "Должно быть в ключе detail сообщение: 'Ошибка при сохранении пользователей.'"
         assert status == 200, "Код ответа должен быть 200" 
         assert res.get("message") == "Пользователи успешно добавлены в базу данных.", "Нет ответа о добавлении"
+    
+    @pytest.mark.asyncio
+    async def test_get_users_pagination(self, page: int = 1, page_size: int = 2) -> None:
+        """
+        ## Тестирует пагинацию в методе `get_users` класса `ApiClient`.
         
+        Этот тест проверяет, что `API` корректно обрабатывает параметры `page` и `page_size`.
+
+        Args:
+            page (int): номер страницы. Defaults to 1.
+            page_size (int): количество элементов на страницу. Defaults to 2.
+        """        
+        res = await ApiClient.get_users(params={"page":page, "page_size": page_size})
+        
+        assert isinstance(res, dict), "Ответ должен быть словарем."
+        assert isinstance(res.get("users"), list), "Пользователи должны быть в виде списка."
+        assert len(res.get("users")) <= page_size, "Количество пользователей не должно превышать page_size."
+        total_count = res.get("total_count")
+        assert isinstance(total_count, int), "Общее количество должно быть целым числом."
+        assert total_count >= 0, "Общее количество пользователей не может быть отрицательным."
     
     @pytest.mark.asyncio 
     async def run_tests(self) -> None:
@@ -139,6 +159,7 @@ class Tester:
         """      
         await self.test_get_users()
         await self.test_insert_users()
+        await self.test_get_users_pagination()
 
 
 
