@@ -1,5 +1,7 @@
 # The solution of the test task from the Mact by Vasily Sibirenkov
 
+![The solution of the test task from the Mact by Vasily Sibirenkov](assets/main.png)
+
 Этот проект представляет собой приложение, состоящее из двух частей: `Backend` и `Frontend`. `Backend` реализован с использованием `FastAPI`, а `Frontend` — с использованием `PyQt6`.
 Данное приложение предназначено для управления пользователями и взаимодействия с базой данных через `API`.
 
