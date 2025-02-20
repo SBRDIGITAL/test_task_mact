@@ -62,6 +62,10 @@ class MyApp(QWidget):
         page_size = self.page_size_spinbox.value()
         self.get_data(page=page, page_size=page_size)
 
+    def __plus_click_count(self):
+        """ ## Увеличивает счетчик кликов на + 1 значение. """
+        self.click_count += 1
+        
     def send_data(self) -> None:
         """
         ## Отправляет данные о новом пользователе на сервер через `API`.
@@ -70,7 +74,7 @@ class MyApp(QWidget):
         В случае успеха отображает сообщение, иначе предупреждение или ошибку.
         """       
         try:
-            self.click_count += 1
+            self.__plus_click_count()
             text = self.ui_helper.line_edit.text().strip()
 
             if not text:
@@ -85,7 +89,6 @@ class MyApp(QWidget):
             except IndexError:
                 nick_name = f"user_{current_time.strftime('%H%M%S')}"
             
-            print(f'{splitted_text=}')
             data = {
                 "users": [
                     {
@@ -93,7 +96,10 @@ class MyApp(QWidget):
                         "last_name": splitted_text[1] if " " in text else None,
                         "nickname": nick_name
                     }
-                ]
+                ],
+                "current_date": datetime.now().strftime('%Y-%m-%d'),
+                "current_time": datetime.now().strftime('%H:%M:%S'),
+                "click_number": self.click_count
             }
 
             response = self.requester.send_request(method='POST', router='users', endpoint='create_users', data=data)
@@ -117,6 +123,7 @@ class MyApp(QWidget):
         В случае ошибки отображает предупреждение или критическое сообщение.
         """      
         try:
+            self.__plus_click_count()
             params = {"page": page, "page_size": page_size}
             response = self.requester.send_request(method='GET', router='users', endpoint='get_users', params=params)
             

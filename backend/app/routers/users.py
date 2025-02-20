@@ -16,27 +16,6 @@ router = APIRouter(prefix='/users', tags=["Пользователи"])
 
 
 
-@router.post("/create_user", response_model=SomeMessage)
-def create_user(user: UserModel) -> SomeMessage:
-    """
-    ## Добавление пользователя в базу данных.
-
-    ### Args:
-        user (UserModel): модель пользователя.
-
-    ### Returns:
-        SomeMessage: сообщение об успешном добавлении пользователя в базу данных.
-    """
-    try:
-        EndpointsUtils.create_user(user)
-        return user_responses.get_ok_created_user
-    
-    except (Exception, HTTPException) as ex:
-        AppExceptionsHandlers.get_exception(ex)
-        raise AppExceptions.CSU
-        
-
-
 @router.post("/create_users", response_model=SomeMessage)
 def create_users(users: ListUsersModel) -> SomeMessage:
     """
