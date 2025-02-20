@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 
     
@@ -21,11 +22,20 @@ class UserModel(BaseModel):
 class ListUsersModel(BaseModel):
     """ ## Модель списка пользователей БЕЗ ИДЕНТИФИКАТОРА. """
     users: List[UserModel]  # Используйте Dict для хранения пользователей по user_id
+    current_date: Optional[str] = Field(default_factory=lambda: datetime.now().strftime('%Y-%m-%d'))
+    current_time: Optional[str] = Field(default_factory=lambda: datetime.now().strftime('%H:%M:%S'))
+    click_number: Optional[int] = None
     
     @field_validator('users')
     def check_users(cls, value):
         if not value:
             raise ValueError('Объект пользователей не должен быть пустым')
+        return value
+    
+    @field_validator('click_number')
+    def check_click_number(cls, value):
+        if value is not None and value < 0:
+            raise ValueError('Порядковый номер клика на кнопку должен быть положительным целым числом')
         return value
     
     class Config:

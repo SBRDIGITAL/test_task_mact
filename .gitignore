@@ -1,8 +1,14 @@
 *.pyc
 *__pycache__
+*.pytest_cache
 *.db
+*.log
 
 *.venv
 *venv
 *.env
 *env
+
+*build
+*dist
+*.spec

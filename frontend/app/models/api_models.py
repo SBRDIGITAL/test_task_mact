@@ -1,8 +1,8 @@
 from typing import List
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 
-from config.api.endpoints_config import EndpointsConfig
+from app.config.api.endpoints_config import EndpointsConfig
 
 
 

@@ -1,12 +1,12 @@
 from typing import Optional
 import requests
 
-from config.literals import AppLiterals as AL
+from app.config.literals import AppLiterals as AL
 
-from config.api.endpoints_config import EndpointsConfig as EC
-from config.api.api_config import ApiConfig
+from app.config.api.endpoints_config import EndpointsConfig as EC
+from app.config.api.api_config import ApiConfig
 
-from exceptions.exception_handler import AppExceptionsHandlers as AXH
+from app.exceptions.exception_handler import AppExceptionsHandlers as AXH
 
 
 

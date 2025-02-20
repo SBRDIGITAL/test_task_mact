@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 
-from config.paths import StaticFilesPaths
+from app.config.paths import StaticFilesPaths
 
 
 

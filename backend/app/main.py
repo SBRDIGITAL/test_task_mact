@@ -1,19 +1,16 @@
 import sys, os
 
 from fastapi import FastAPI
+import uvicorn
 
 # Добавляем путь к корневой директории проекта
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from traceback import print_exc
+from time import sleep
 
 from database.crud import db_crud
 from routers.users import router as users_router
-
-
-
-""" 
-1. Написать тесты (как минимум 3 теста "автотесты").
-2. Упаковать сервер в `.exe` с опцией onedir.
-"""
 
 
 
@@ -68,3 +65,10 @@ app = fast_api_app.app
 Запуск
 Перейти в директорию backend\app> и выполнить команду uvicorn main:app --reload
 """
+
+try:
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=False, log_level='info', access_log=False)
+except:
+    print_exc()
+finally:
+    sleep(30)
