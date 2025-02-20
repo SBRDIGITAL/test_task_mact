@@ -5,8 +5,8 @@ from PyQt6.QtWidgets import QApplication
 # Добавляем путь к корневой директории проекта
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config.literals import AppLiterals as AL
-from dependencies.app import MyApp
+from app.config.literals import AppLiterals as AL
+from app.dependencies.app import MyApp
 
 
 

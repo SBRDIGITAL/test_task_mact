@@ -5,10 +5,10 @@ from datetime import datetime
 
 from PyQt6.QtWidgets import QWidget, QMessageBox
 
-from config.api.api_config import ApiConfig
-from utils.requests_utils import Requester
+from app.config.api.api_config import ApiConfig
+from app.utils.requests_utils import Requester
 
-from config.literals import AppLiterals as AL
+from app.config.literals import AppLiterals as AL
 
 from .ui_helper import UIHelper
 

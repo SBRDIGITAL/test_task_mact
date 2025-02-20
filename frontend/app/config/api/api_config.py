@@ -1,11 +1,11 @@
 from pydantic import ValidationError
 
 from .endpoints_config import EndpointsConfig
-from models.api_models import AllowEndpoint, AllowEndpoints, AllowRouter, AllowRouters
+from app.models.api_models import AllowEndpoint, AllowEndpoints, AllowRouter, AllowRouters
 
 from ..literals import AppLiterals as AL
 
-from exceptions.exception_handler import AXH
+from app.exceptions.exception_handler import AXH
 
 
 

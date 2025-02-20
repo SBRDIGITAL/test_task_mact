@@ -12,7 +12,7 @@ from aiohttp_client.app.app import AsyncHttpClient
 
 class ApiClient:
     """
-    ## Класс ApiClient для взаимодействия с `API`.
+    ## Класс `ApiClient` для взаимодействия с `API`.
 
     Этот класс предоставляет методы для выполнения запросов к `API`, включая получение списка пользователей.
 
