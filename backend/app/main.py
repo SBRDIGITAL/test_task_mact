@@ -10,13 +10,6 @@ from routers.users import router as users_router
 
 
 
-""" 
-1. Написать тесты (как минимум 3 теста "автотесты").
-2. Упаковать сервер в `.exe` с опцией onedir.
-"""
-
-
-
 class FastAPIapp:
     
     def __init__(self) -> None:

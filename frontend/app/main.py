@@ -23,7 +23,7 @@ class StartUp:
     @staticmethod
     def start(proto: AL.Proto = 'http', base_url: str = '127.0.0.1:8000'):
         """ 
-        ## Запуск приложения
+        ## Запуск приложения.
 
         Перейдите в директорию `frontend > app` и запустите `python.exe ./main.py`.
 
