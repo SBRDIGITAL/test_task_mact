@@ -121,6 +121,18 @@ frontend/
 - Если у вас возникли проблемы с запуском, проверьте, установлены ли все зависимости и правильно ли настроены пути в проекте.
 
 
+---
+
+
+# Компиляция в `.exe` файл
+Для компиляции в `.exe` необходимо операционная машина локального хоста должна быть Windows
+Необходимо иметь установленный [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/ru/visual-cpp-build-tools/)
+При установке `Microsoft C++ Build Tools` необходимо дополнительно выбрать `Разработка классических приложений на C++`.
+
+```bash
+nuitka --enable-plugin=pyqt6 --follow-imports --standalone --jobs=4 --onefile  --disable-console .\app\main.py
+```
+
 
 ---
 

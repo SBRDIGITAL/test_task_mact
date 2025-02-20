@@ -1,4 +1,5 @@
-from os.path import dirname, abspath, join
+from os.path import join
+
 
 
 class DirPaths:
@@ -14,7 +15,6 @@ class DirPaths:
         DATABASE_DIR (str): Каталог базы данных, находящийся в APPS_DIR.
         DB_DIR (str): Каталог, содержащий файлы базы данных, находящийся в DATABASE_DIR.
     """
-    # BASE_DIR = dirname(dirname(dirname(__file__)))
     BASE_DIR = join('.')
     print(f'{BASE_DIR=}')
     APPS_DIR = join(BASE_DIR, 'app')

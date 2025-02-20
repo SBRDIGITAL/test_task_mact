@@ -147,3 +147,19 @@ FastAPI автоматически генерирует документацию
 ```
 http://127.0.0.1:8000/docs
 ```
+
+
+---
+
+
+# Компиляция в `.exe` файл
+Для компиляции в `.exe` необходимо операционная машина локального хоста должна быть Windows
+Необходимо иметь установленный [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/ru/visual-cpp-build-tools/)
+При установке `Microsoft C++ Build Tools` необходимо дополнительно выбрать `Разработка классических приложений на C++`.
+
+```bash
+nuitka --follow-imports --standalone --jobs=4 --onefile .\app\main.py
+```
+
+
+---
