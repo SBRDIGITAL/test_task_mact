@@ -3,21 +3,30 @@ from models.responses import SomeMessage
 
 
 class ResponsesHelper:
-    
+    """ 
+    ## Вспомогательный класс для генерации сообщений ответов.
+
+    Этот класс предоставляет методы для создания сообщений ответов в стандартизированном формате.
+    """
     def get_message(self, msg: str) -> SomeMessage:
-        """
-        ## Возвращает словарь с ключом и значением.
+        """ 
+        ## Возвращает объект сообщения ответа.
 
-        Args:
-            msg (str): значение.
+        Аргументы:
+            msg (str): Сообщение, которое будет включено в ответ.
 
-        Returns:
-            dict[str, str]: словарь с ключом и значением для ответа
-        """        
+        Возвращает:
+            SomeMessage: Экземпляр `SomeMessage`, содержащий переданное сообщение.
+        """     
         return SomeMessage(message=msg)
 
 
 class UserResponses(ResponsesHelper):
+    """ 
+    ## Класс для обработки ответов от сервера к клиенту, связанных с ендпоинтом `users`.
+
+    Этот класс предоставляет методы(свойства) для генерации сообщений ответов, связанных с операциями над пользователями.
+    """
     
     @property
     def get_ok_created_user(self) -> SomeMessage:
@@ -32,7 +41,7 @@ class UserResponses(ResponsesHelper):
     @property
     def get_ok_created_userS(self) -> SomeMessage:
         """
-        ## Возвращает `JSON` ответ об успешном добавлении пользователей.
+        ## Возвращает ответ об успешном добавлении нескольких пользователей.
 
         Returns:
             SomeMessage: объект ответа.

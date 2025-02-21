@@ -4,10 +4,10 @@ from fastapi.routing import APIRouter
 from utils.endpoints_utils import EndpointsUtils
 from responses.base_responses import user_responses
 
-from exceptions.base_exceptions import AppExceptions
+from exceptions.base_exceptions import HTTPExceptions
 from exceptions.exception_handler import AppExceptionsHandlers
 
-from models.users import ListUsersModel, ListUsersWithIdModel, UserModel
+from models.users import ListUsersModel, ListUsersWithIdModel
 from models.responses import SomeMessage
 
 
@@ -33,7 +33,7 @@ def create_users(users: ListUsersModel) -> SomeMessage:
     
     except (Exception, HTTPException) as ex:
         AppExceptionsHandlers.get_exception(ex)
-        raise AppExceptions.CSU
+        raise HTTPExceptions.CantSaveUsersError
 
 
 @router.get("/get_users", response_model=ListUsersWithIdModel)
@@ -53,4 +53,4 @@ def get_users(page: int = Query(1, ge=1), page_size: int = Query(5, ge=1)) -> Li
     
     except (Exception, HTTPException) as ex:
         AppExceptionsHandlers.get_exception(ex)
-        raise AppExceptions.CGUE
+        raise HTTPExceptions.CantGetUsersError

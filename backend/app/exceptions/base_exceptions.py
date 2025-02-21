@@ -30,19 +30,3 @@ class HTTPExceptions:
         status_code=status.HTTP_409_CONFLICT,
         detail='Ошибка при сохранении пользователей.'
     )
-
-
-class AppExceptions:
-    """
-    ## Класс содержащий константы объектов `HTTPException` исключений приложения.
-    
-    Attributes:
-        ISE (HTTPException): `500` - внутренняя ошибка сервера.
-        BR (HTTPException): `400` - Bad Request.
-        CGUE (HTTPException): `500` - Ошибка при получении пользователей.
-        CSU (HTTPException): `409` - Ошибка при сохранении пользователей.
-    """
-    ISE = HTTPExceptions.InternalServerError
-    BR = HTTPExceptions.BadRequest
-    CGUE = HTTPExceptions.CantGetUsersError
-    CSU = HTTPExceptions.CantSaveUsersError
